@@ -1,39 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sthrace <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/02 09:32:14 by sthrace           #+#    #+#             */
-/*   Updated: 2021/02/16 16:35:33 by sthrace          ###   ########.fr       */
+/*   Created: 2021/02/16 18:50:36 by sthrace           #+#    #+#             */
+/*   Updated: 2021/02/16 18:51:25 by sthrace          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int				ft_printf(const char *format, ...)
+int				ft_nbrlen(long long nbr, int base)
 {
-	va_list		args;
-	char		*str;
-	int			i;
-	t_struct	f;
+	int		i;
 
-	va_start(args, format);
-	str = (char *)format;
-	g_fsize = 0;
-	i = 0;
-	while (str[i])
+	i = 1;
+	while (nbr >= base)
 	{
-		if (str[i] == '%')
-		{
-			ft_init_formats(&f);
-			i = ft_parser(str, args, (i + 1), &f);
-		}
-		else
-			g_fsize += write(1, &str[i], 1);
+		nbr /= base;
 		i++;
 	}
-	va_end(args);
-	return (g_fsize);
+	return (i);
+}
+
+void			ft_putnbr(long long nbr, int base, char *ascii)
+{
+	if (nbr >= base)
+		ft_putnbr(nbr / base, base, ascii);
+	write(1, &ascii[nbr % base], 1);
 }

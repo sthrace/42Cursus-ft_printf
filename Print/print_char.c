@@ -1,39 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   print_char.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sthrace <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/02 09:32:14 by sthrace           #+#    #+#             */
-/*   Updated: 2021/02/16 16:35:33 by sthrace          ###   ########.fr       */
+/*   Created: 2021/02/16 17:09:24 by sthrace           #+#    #+#             */
+/*   Updated: 2021/02/16 17:09:39 by sthrace          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int				ft_printf(const char *format, ...)
+void		ft_type_char(int c, t_struct *f)
 {
-	va_list		args;
-	char		*str;
-	int			i;
-	t_struct	f;
-
-	va_start(args, format);
-	str = (char *)format;
-	g_fsize = 0;
-	i = 0;
-	while (str[i])
+	if (f->flagleft == 0)
 	{
-		if (str[i] == '%')
-		{
-			ft_init_formats(&f);
-			i = ft_parser(str, args, (i + 1), &f);
-		}
-		else
-			g_fsize += write(1, &str[i], 1);
-		i++;
+		while (f->width-- > 1)
+			if (f->flagzero == 0)
+				g_fsize += write(1, " ", 1);
+			else
+				g_fsize += write(1, "0", 1);
 	}
-	va_end(args);
-	return (g_fsize);
+	g_fsize += write(1, &c, 1);
+	if (f->flagleft == 1)
+		while (f->width-- > 1)
+			g_fsize += write(1, " ", 1);
 }
